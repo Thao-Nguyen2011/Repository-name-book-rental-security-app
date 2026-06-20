@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="invoice-toolbar no-print">
+    <a class="btn-small" href="{{ url_for('download_invoice', rental_id=request.view_args.get('rental_id')) }}">Tải hóa đơn TXT</a>
+    <button class="btn-small" onclick="window.print()">In / Lưu PDF</button>
+    {% if can_manage_rentals %}
+        <a class="btn-small secondary-outline" href="{{ url_for('admin') }}">Quay lại quản trị</a>
+    {% else %}
+        <a class="btn-small secondary-outline" href="{{ url_for('my_rentals') }}">Quay lại lịch sử thuê</a>
+    {% endif %}
+</div>
+
+<section class="invoice-paper">
+    <div class="invoice-header">
+        <div>
+            <h2>{{ invoice.shop_name }}</h2>
+            <p>Địa chỉ: {{ invoice.shop_address }}</p>
+            <p>Điện thoại: {{ invoice.shop_phone }} - Email: {{ invoice.shop_email }}</p>
+        </div>
+        <div class="invoice-code-box">
+            <span>Mã hóa đơn</span>
+            <strong>{{ invoice.invoice_code }}</strong>
+        </div>
+    </div>
+
+    <div class="invoice-title-block">
+        <h1>HÓA ĐƠN THUÊ SÁCH</h1>
+        <p>Ngày lập: {{ invoice.issued_at }}</p>
+    </div>
+
+    <div class="invoice-info-grid">
+        <div>
+            <h3>Thông tin khách hàng</h3>
+            <p><strong>Họ tên:</strong> {{ invoice.customer_name }}</p>
+            <p><strong>Tài khoản:</strong> {{ invoice.customer_username }}</p>
+            <p><strong>Mã đơn thuê:</strong> {{ invoice.rental_code }}</p>
+        </div>
+        <div>
+            <h3>Thông tin đơn thuê</h3>
+            <p><strong>Trạng thái:</strong> {{ invoice.status }}</p>
+            <p><strong>Ngày thuê:</strong> {{ invoice.created_at }}</p>
+            <p><strong>Hạn trả:</strong> {{ invoice.due_at }}</p>
+            <p><strong>Ngày trả:</strong> {{ invoice.returned_at or 'Chưa trả' }}</p>
+        </div>
+    </div>
+
+    <table class="invoice-table">
+        <tr>
+            <th>STT</th>
+            <th>Tên sách</th>
+            <th>Tác giả</th>
+            <th>Thể loại</th>
+            <th>Số ngày</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>{{ invoice.book_title }}</td>
+            <td>{{ invoice.book_author }}</td>
+            <td>{{ invoice.book_category }}</td>
+            <td>{{ invoice.rental_days }}</td>
+            <td>{{ invoice.unit_price|money_vnd }}</td>
+            <td>{{ invoice.subtotal|money_vnd }}</td>
+        </tr>
+    </table>
+
+    <div class="invoice-total-box">
+        <div><span>Tiền thuê sách:</span><strong>{{ invoice.subtotal|money_vnd }}</strong></div>
+        <div><span>Phí quá hạn:</span><strong>{{ invoice.late_fee|money_vnd }}</strong></div>
+        <div class="grand-total"><span>Tổng thanh toán:</span><strong>{{ invoice.total_amount|money_vnd }}</strong></div>
+    </div>
+
+    <div class="invoice-note">
+        <strong>Ghi chú:</strong> {{ invoice.note or 'Không có ghi chú.' }}
+    </div>
+
+    <div class="invoice-signatures">
+        <div>
+            <p>Khách hàng</p>
+            <span>Ký và ghi rõ họ tên</span>
+        </div>
+        <div>
+            <p>Người lập hóa đơn</p>
+            <span>Ký và ghi rõ họ tên</span>
+        </div>
+    </div>
+</section>
+{% endblock %}

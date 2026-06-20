@@ -1,0 +1,60 @@
+HUONG DAN CHAY DU AN BOOK RENTAL SECURITY - BAN HOAN THIEN TUAN 5-6
+
+1. Mo terminal dung trong thu muc co file app.py.
+2. Tao moi truong ao neu chua co:
+   py -m venv venv
+   venv\Scripts\activate
+3. Cai thu vien:
+   py -m pip install -r requirements.txt
+4. Chay web:
+   py app.py
+5. Mo trinh duyet:
+   http://127.0.0.1:5000
+
+TAI KHOAN DEMO
+- Admin: admin / admin123
+- Nhan vien: staff / staff123
+- Khach hang: dang ky truc tiep tren web
+
+CHUC NANG CHINH DA CO
+1. Dang ky, dang nhap, dang xuat.
+2. Phan quyen Customer/Staff/Admin.
+3. Quan ly sach/truyen, anh bia, so luong con/het.
+4. Khach hang gui yeu cau thue sach va xem lich su.
+5. Staff/Admin xac nhan thue, xac nhan tra, huy don.
+6. Bo sung han tra sach mac dinh 7 ngay va tinh phi qua han 3.000 VND/ngay.
+7. Admin quan ly tai khoan va phan quyen.
+8. Admin quet lo hong co ban nhieu URL, luu lich su, tinh diem rui ro va xuat bao cao TXT.
+9. Bo sung kiem tra HTTPS, HTTP status, Security Headers, Cookie, CSRF, Upload file, SQL Injection, XSS, lo debug va duong dan quan tri.
+10. Staff/Admin xem thong ke he thong va xuat don thue CSV.
+11. Admin xem nhat ky he thong va sao luu database.db.
+
+QUY TRINH DEMO GOI Y
+1. Chay app va vao http://127.0.0.1:5000.
+2. Dang ky mot tai khoan khach hang moi.
+3. Khach hang vao Sach truyen, chon mot sach va bam Gui yeu cau thue.
+4. Dang xuat khach hang, dang nhap nhan vien staff/staff123.
+5. Vao Quan tri, bam Xac nhan thue cho don moi.
+6. Bam Xac nhan tra de hoan tat don, xem cot han tra/ngay tra/phi qua han.
+7. Dang xuat staff, dang nhap admin/admin123.
+8. Vao Quet lo hong, nhap:
+   http://127.0.0.1:5000/login
+   http://127.0.0.1:5000/books
+9. Xem ket qua quet, diem rui ro, lich su quet va xuat bao cao TXT.
+10. Vao Thong ke va Nhat ky de chup anh minh chung cho bao cao.
+
+LUU Y
+- Khi kiem thu nhieu vai tro tren cung trinh duyet, nen dang xuat truoc khi dang nhap tai khoan khac.
+- Hoac dung cua so an danh/trinh duyet khac de tranh session bi ghi de.
+- Chi quet website cua minh hoac moi truong duoc phep kiem thu.
+
+HƯỚNG DẪN DEMO CHỨC NĂNG XUẤT HÓA ĐƠN THUÊ SÁCH
+1. Đăng nhập tài khoản khách hàng hoặc đăng ký tài khoản mới.
+2. Vào Sách truyện, chọn một sách còn số lượng và bấm Thuê sách.
+3. Đăng xuất tài khoản khách hàng.
+4. Đăng nhập tài khoản nhân viên: staff / staff123 hoặc admin: admin / admin123.
+5. Vào Quản trị, tại mục Quản lý đơn thuê bấm Xác nhận thuê.
+6. Sau khi xác nhận, bấm nút Hóa đơn ở dòng đơn thuê để xem hóa đơn.
+7. Trong trang hóa đơn, bấm Tải hóa đơn TXT để tải file hóa đơn dạng văn bản.
+8. Có thể bấm In / Lưu PDF để in hóa đơn hoặc lưu thành PDF bằng trình duyệt.
+9. Khi khách trả sách, bấm Xác nhận trả. Nếu quá hạn, hệ thống tự tính phí quá hạn và cập nhật vào hóa đơn.

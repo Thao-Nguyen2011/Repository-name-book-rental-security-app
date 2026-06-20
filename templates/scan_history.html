@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-title">
+    <div>
+        <h2>Lịch sử quét lỗ hổng</h2>
+        <p>Lưu lại kết quả các lần quét để phục vụ báo cáo và minh chứng.</p>
+    </div>
+    <a class="btn" href="{{ url_for('security_scan') }}">Quét mới</a>
+</div>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>URL</th>
+        <th>Thời gian</th>
+        <th>Người quét</th>
+        <th>Tổng kiểm tra</th>
+        <th>Điểm rủi ro</th>
+        <th>Cao</th>
+        <th>Trung bình</th>
+        <th>Thấp</th>
+        <th>Thao tác</th>
+    </tr>
+
+    {% for item in histories %}
+    <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.url }}</td>
+        <td>{{ item.scanned_at }}</td>
+        <td>{{ item.fullname or 'Không rõ' }}</td>
+        <td>{{ item.total }}</td>
+        <td><span class="risk-score small">{{ item.risk_score }}/100</span></td>
+        <td><span class="level-pill danger-level">{{ item.high_count }}</span></td>
+        <td><span class="level-pill warning-level">{{ item.medium_count }}</span></td>
+        <td><span class="level-pill safe-level">{{ item.low_count }}</span></td>
+        <td>
+            <a class="btn-small" href="{{ url_for('scan_detail', history_id=item.id) }}">Xem</a>
+            <a class="btn-small" href="{{ url_for('export_scan', history_id=item.id) }}">Xuất</a>
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="10">Chưa có lịch sử quét.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

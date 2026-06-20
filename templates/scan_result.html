@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-title">
+    <div>
+        <h2>Kết quả quét lỗ hổng</h2>
+        <p>Hiển thị mức độ nguy hiểm, điểm rủi ro, chi tiết phát hiện và đề xuất khắc phục.</p>
+    </div>
+    <div class="page-actions">
+        <a class="btn secondary" href="{{ url_for('security_scan') }}">Quét lại</a>
+        <a class="btn" href="{{ url_for('scan_history') }}">Lịch sử quét</a>
+    </div>
+</div>
+
+{% for scan in scans %}
+<section class="scan-block">
+    <div class="scan-summary">
+        <div>
+            <h3>{{ scan.url }}</h3>
+            <p>Thời gian quét: {{ scan.scanned_at }}</p>
+        </div>
+        <div class="level-summary">
+            <span class="risk-score">Rủi ro: {{ scan.risk_score }}/100</span>
+            <span class="level-pill danger-level">Cao: {{ scan.levels.high }}</span>
+            <span class="level-pill warning-level">Trung bình: {{ scan.levels.medium }}</span>
+            <span class="level-pill safe-level">Thấp: {{ scan.levels.low }}</span>
+            <a class="btn-small" href="{{ url_for('export_scan', history_id=scan.history_id) }}">Xuất báo cáo</a>
+        </div>
+    </div>
+
+    <div class="result-list">
+        {% for item in scan.results %}
+        <div class="result-card {{ item.level|level_class }}">
+            <div class="result-title">
+                <div>
+                    <span class="muted-small">{{ item.module or 'Tổng quát' }}</span>
+                    <h3>{{ item.name }}</h3>
+                </div>
+                <span class="level-pill {{ item.level|level_class }}">{{ item.level }}</span>
+            </div>
+            <p><b>Trạng thái:</b> {{ item.status }}</p>
+            <p><b>Chi tiết:</b> {{ item.detail }}</p>
+            <p><b>Đề xuất:</b> {{ item.solution }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

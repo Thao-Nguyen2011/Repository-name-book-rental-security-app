@@ -1,0 +1,24 @@
+NHAT KY CAP NHAT CODE TUAN 5-6
+
+TUAN 5 - Nang cap quet lo hong va luu ket qua
+1. Nang cap scanner.py de kiem tra them HTTPS, HTTP status, Security Headers, Cookie, CSRF, Upload file, SQL Injection, XSS, lo debug va truy cap duong dan quan tri.
+2. Bo sung diem rui ro risk_score cho moi lan quet.
+3. Luu lich su quet vao bang scan_history, xem chi tiet va xuat bao cao TXT.
+4. Giao dien ket qua quet hien thi nhom kiem tra, muc do rui ro, chi tiet va de xuat khac phuc.
+
+TUAN 6 - Hoan thien nghiep vu thue/tra va minh chung bao cao
+1. Bo sung ma don rental_code cho tung don thue.
+2. Bo sung han tra due_at mac dinh 7 ngay sau khi khach gui yeu cau thue.
+3. Bo sung ngay tra returned_at va phi qua han late_fee khi nhan vien/admin xac nhan tra sach.
+4. Bo sung thong ke don qua han va tong phi qua han.
+5. Bo sung nhat ky he thong audit_logs de ghi lai cac thao tac quan trong: dang nhap, tao don, xac nhan thue, tra sach, huy don, sua sach, quet lo hong, sao luu database.
+6. Bo sung trang Nhat ky trong menu Admin.
+7. Cap nhat file huong dan chay va demo.
+
+BỔ SUNG NÂNG CẤP: XUẤT HÓA ĐƠN THUÊ SÁCH
+- Thêm bảng invoices để lưu thông tin hóa đơn theo từng đơn thuê.
+- Khi Nhân viên/Admin xác nhận thuê, hệ thống tạo hóa đơn tạm tính cho đơn thuê.
+- Khi xác nhận trả sách, hóa đơn được cập nhật thêm phí quá hạn nếu có.
+- Khách hàng có thể xem hóa đơn trong trang Lịch sử thuê sách.
+- Nhân viên/Admin có thể xem hóa đơn trong trang Quản lý đơn thuê.
+- Hóa đơn có giao diện in ấn, có nút In/Lưu PDF bằng trình duyệt và nút tải file TXT.

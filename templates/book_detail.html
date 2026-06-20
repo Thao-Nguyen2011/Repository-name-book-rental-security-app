@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="detail-page">
+    <div class="detail-cover-panel">
+        <img class="detail-cover" src="{{ book.cover_image or '/static/uploads/default-cover.svg' }}" alt="Ảnh bìa {{ book.title }}">
+    </div>
+
+    <div class="detail-info-panel">
+        <span class="category-tag">{{ book.category }}</span>
+        <h2>{{ book.title }}</h2>
+        <p class="detail-author">Tác giả: <b>{{ book.author }}</b></p>
+        <p class="detail-price">{{ "{:,.0f}".format(book.price) }} VNĐ / lượt thuê</p>
+
+        {% if book.quantity > 0 %}
+            <span class="status-badge approved">Còn {{ book.quantity }} quyển</span>
+        {% else %}
+            <span class="status-badge cancelled">Hết sách</span>
+        {% endif %}
+
+        <div class="detail-desc">
+            <h3>Mô tả sách/truyện</h3>
+            <p>{{ book.description or 'Chưa có mô tả.' }}</p>
+        </div>
+
+        <div class="detail-actions">
+            <a class="btn secondary-outline" href="{{ url_for('books') }}">Quay lại danh sách</a>
+            {% if session.get("user_id") and session.get("role") == 'customer' and book.quantity > 0 %}
+                <a class="btn" href="{{ url_for('rent_book', book_id=book.id) }}">Gửi yêu cầu thuê</a>
+            {% elif not session.get("user_id") %}
+                <a class="btn" href="{{ url_for('login') }}">Đăng nhập để thuê</a>
+            {% elif book.quantity <= 0 %}
+                <span class="btn disabled">Sách đang hết</span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

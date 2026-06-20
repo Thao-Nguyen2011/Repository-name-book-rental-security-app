@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-box large">
+    <h2>Sửa thông tin sách</h2>
+
+    <!-- Form sửa thông tin sách -->
+    <!-- enctype="multipart/form-data" cho phép upload ảnh bìa mới từ máy -->
+    <form method="POST" enctype="multipart/form-data">
+        <label>Tên sách</label>
+        <input type="text" name="title" value="{{ book.title }}" required>
+
+        <label>Tác giả</label>
+        <input type="text" name="author" value="{{ book.author }}" required>
+
+        <label>Thể loại</label>
+        <input type="text" name="category" value="{{ book.category }}" required>
+
+        <label>Số lượng</label>
+        <input type="number" name="quantity" min="0" value="{{ book.quantity }}" required>
+
+        <label>Giá thuê</label>
+        <input type="number" name="price" min="0" value="{{ book.price }}" required>
+
+        <label>Mô tả</label>
+        <input type="text" name="description" value="{{ book.description }}">
+
+        <!-- Hiển thị ảnh bìa hiện tại của sách trước khi sửa -->
+        <label>Ảnh bìa hiện tại</label>
+        <div class="current-cover-box">
+            <!-- Nếu sách chưa có ảnh thì hiển thị ảnh mặc định -->
+            <img class="edit-cover-preview" src="{{ book.cover_image or '/static/uploads/default-cover.svg' }}" alt="Ảnh bìa {{ book.title }}">
+        </div>
+
+        <!-- Ô nhập link ảnh bìa mới -->
+        <!-- name="cover_image" được Flask lấy bằng request.form.get("cover_image") -->
+        <label>Link ảnh bìa truyện</label>
+        <input type="text" name="cover_image" value="{{ book.cover_image or '' }}" placeholder="Dán link ảnh hoặc để trống">
+
+        <!-- Ô upload ảnh mới từ máy -->
+        <!-- name="cover_file" được Flask lấy bằng request.files.get("cover_file") -->
+        <label>Tải ảnh mới từ máy</label>
+        <input type="file" name="cover_file" accept="image/*">
+
+        <button type="submit">Cập nhật</button>
+        <a class="btn secondary" href="{{ url_for('admin') }}">Quay lại</a>
+    </form>
+</div>
+{% endblock %}

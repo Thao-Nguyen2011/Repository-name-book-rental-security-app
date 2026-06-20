@@ -1,0 +1,46 @@
+BẢN HOÀN THIỆN NHẤT - WEBSITE QUẢN LÝ THUÊ SÁCH + QUÉT LỖ HỔNG
+
+1. CÁCH CHẠY
+- Mở terminal trong thư mục có file app.py.
+- Cài thư viện:
+  py -m pip install -r requirements.txt
+- Chạy app:
+  py app.py
+- Mở trình duyệt:
+  http://127.0.0.1:5000
+
+2. TÀI KHOẢN DEMO
+- Admin: admin / admin123
+- Nhân viên: staff / staff123
+- Khách hàng: đăng ký trực tiếp trên web
+
+3. CHỨC NĂNG ĐÃ HOÀN THIỆN
+- Đăng ký, đăng nhập, đăng xuất.
+- Phân quyền Khách hàng / Nhân viên / Admin.
+- Quản lý sách: thêm, sửa, xóa, tìm kiếm, upload ảnh bìa.
+- Tự tạo nhiều sách mẫu khi chạy app.
+- Khách hàng xem danh sách sách, xem chi tiết sách, gửi yêu cầu thuê.
+- Nhân viên/Admin xác nhận thuê, xác nhận trả, hủy đơn thuê.
+- Tạo mã đơn thuê, hạn trả 7 ngày, ngày trả, phí quá hạn.
+- Tạo hóa đơn tự động khi xác nhận thuê.
+- Cập nhật hóa đơn khi xác nhận trả sách.
+- Xem hóa đơn đẹp trên web.
+- Tải hóa đơn TXT.
+- In/Lưu hóa đơn PDF bằng trình duyệt.
+- Xuất danh sách đơn thuê CSV dùng dấu ; để mở Excel dễ tách cột hơn.
+- Thống kê sách, tài khoản, đơn chờ xác nhận, đang thuê, quá hạn, phí quá hạn, hóa đơn, lượt quét.
+- Quét lỗ hổng cơ bản: Security Headers, form, SQL Injection/XSS nhận diện an toàn, cookie/session, upload, admin path.
+- Lưu lịch sử quét, xem chi tiết, xuất báo cáo quét TXT.
+- Nhật ký hệ thống: đăng nhập, tạo đơn, xác nhận thuê/trả, xuất hóa đơn, quét lỗ hổng, sao lưu.
+- Sao lưu database.db.
+
+4. LUỒNG DEMO ĐỀ XUẤT
+- Đăng ký tài khoản khách hàng.
+- Khách hàng chọn sách và gửi yêu cầu thuê.
+- Đăng nhập Admin: admin/admin123.
+- Vào Trang quản trị -> Xác nhận thuê.
+- Bấm Xem hóa đơn để thấy hóa đơn đẹp.
+- Bấm In/Lưu PDF hoặc Tải TXT.
+- Bấm Xác nhận trả để cập nhật trạng thái và phí quá hạn nếu có.
+- Vào Nhật ký hệ thống để chứng minh các thao tác đã được ghi lại.
+- Vào Quét lỗ hổng để demo chức năng bảo mật.

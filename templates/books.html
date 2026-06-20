@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-title app-title">
+    <div>
+        <span class="eyebrow soft">Kho sách trực tuyến</span>
+        <h2>Danh sách sách truyện</h2>
+        <p>Tìm kiếm sách theo tên, tác giả, thể loại và tình trạng còn sách.</p>
+    </div>
+</div>
+
+<form class="filter-box app-filter" method="GET">
+    <input type="text" name="keyword" placeholder="Tìm theo tên sách, tác giả, thể loại..." value="{{ keyword }}">
+    <select name="category">
+        <option value="">Tất cả thể loại</option>
+        {% for item in categories %}
+            <option value="{{ item.category }}" {% if category == item.category %}selected{% endif %}>{{ item.category }}</option>
+        {% endfor %}
+    </select>
+    <select name="availability">
+        <option value="" {% if not availability %}selected{% endif %}>Tất cả tình trạng</option>
+        <option value="available" {% if availability == 'available' %}selected{% endif %}>Còn sách</option>
+        <option value="out" {% if availability == 'out' %}selected{% endif %}>Hết sách</option>
+    </select>
+    <button type="submit">Tìm kiếm</button>
+</form>
+
+<div class="book-grid app-book-grid">
+    {% for book in books %}
+    <div class="book-card app-book-card">
+        <a class="cover-wrap app-cover-wrap" href="{{ url_for('book_detail', book_id=book.id) }}">
+            <img class="book-cover app-book-cover" src="{{ book.cover_image or '/static/uploads/default-cover.svg' }}" alt="Ảnh bìa {{ book.title }}">
+        </a>
+
+        <div class="book-body">
+            <div class="book-topline">
+                <span class="category-tag">{{ book.category }}</span>
+                {% if book.quantity > 0 %}
+                    <span class="status-badge approved">Còn {{ book.quantity }}</span>
+                {% else %}
+                    <span class="status-badge cancelled">Hết sách</span>
+                {% endif %}
+            </div>
+
+            <h3><a class="book-title-link" href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a></h3>
+            <p class="book-author">{{ book.author }}</p>
+            <p class="book-price">{{ "{:,.0f}".format(book.price) }} VNĐ / lượt thuê</p>
+            <p class="book-desc">{{ book.description }}</p>
+
+            <div class="book-actions">
+                <a class="btn secondary-outline" href="{{ url_for('book_detail', book_id=book.id) }}">Chi tiết</a>
+                {% if session.get("user_id") and session.get("role") == 'customer' and book.quantity > 0 %}
+                    <a class="btn" href="{{ url_for('rent_book', book_id=book.id) }}">Thuê sách</a>
+                {% elif not session.get("user_id") %}
+                    <a class="btn" href="{{ url_for('login') }}">Đăng nhập để thuê</a>
+                {% elif book.quantity <= 0 %}
+                    <span class="btn disabled">Tạm hết sách</span>
+                {% else %}
+                    <span class="btn disabled">Tài khoản quản trị</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-box">Không tìm thấy sách phù hợp.</div>
+    {% endfor %}
+</div>
+{% endblock %}

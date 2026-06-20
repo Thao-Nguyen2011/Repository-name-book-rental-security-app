@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-title">
+    <div>
+        <h2>Nhật ký hệ thống</h2>
+        <p>Lưu lại các thao tác quan trọng để phục vụ kiểm thử, demo và báo cáo.</p>
+    </div>
+    <a class="btn secondary" href="{{ url_for('admin') }}">Quay lại quản trị</a>
+</div>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Thời gian</th>
+        <th>Người thực hiện</th>
+        <th>Hành động</th>
+        <th>Chi tiết</th>
+    </tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.id }}</td>
+        <td>{{ log.created_at }}</td>
+        <td>{{ log.fullname or 'Hệ thống' }}{% if log.username %}<br><span class="muted-small">{{ log.username }}</span>{% endif %}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.detail or '' }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">Chưa có nhật ký hệ thống.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

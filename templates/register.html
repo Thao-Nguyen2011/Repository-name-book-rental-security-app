@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-box">
+    <h2>Đăng ký tài khoản</h2>
+
+    <form method="POST">
+        <label>Họ và tên</label>
+        <input type="text" name="fullname" required>
+
+        <label>Tên đăng nhập</label>
+        <input type="text" name="username" minlength="3" required>
+
+        <label>Mật khẩu</label>
+        <input type="password" name="password" minlength="6" required>
+
+        <label>Nhập lại mật khẩu</label>
+        <input type="password" name="confirm_password" minlength="6" required>
+
+        <button type="submit">Đăng ký</button>
+    </form>
+</div>
+{% endblock %}

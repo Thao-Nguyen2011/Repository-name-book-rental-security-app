@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-title">
+    <div>
+        <h2>{{ title }}</h2>
+        {% if mode == "admin" %}<p>Quản lý sách, đơn thuê/trả, tài khoản và trạng thái hệ thống.</p>{% endif %}
+    </div>
+</div>
+
+{% if mode == "my_rentals" %}
+<table>
+    <tr>
+        <th>Mã đơn</th>
+        <th>Tên sách</th>
+        <th>Tác giả</th>
+        <th>Trạng thái</th>
+        <th>Ngày tạo</th>
+        <th>Hạn trả</th>
+        <th>Ngày trả</th>
+        <th>Phí quá hạn</th>
+        <th>Ghi chú</th>
+        <th>Hóa đơn</th>
+    </tr>
+
+    {% for rental in rentals %}
+    <tr>
+        <td>{{ rental.rental_code or rental.id }}</td>
+        <td>{{ rental.title }}</td>
+        <td>{{ rental.author }}</td>
+        <td><span class="status-badge {{ rental.status|status_class }}">{{ rental.status }}</span></td>
+        <td>{{ rental.created_at or '' }}</td>
+        <td>{{ rental.due_at or '' }}</td>
+        <td>{{ rental.returned_at or '' }}</td>
+        <td>{{ "{:,.0f}".format(rental.late_fee or 0) }} VNĐ</td>
+        <td>{{ rental.note or '' }}</td>
+        <td>
+            {% if rental.status != 'Đã hủy' %}
+                <a class="btn-small" href="{{ url_for('invoice_detail', rental_id=rental.id) }}">Xem hóa đơn</a>
+                <a class="btn-small secondary-outline" href="{{ url_for('download_invoice', rental_id=rental.id) }}">Tải TXT</a>
+            {% else %}
+                <span class="muted-small">Không xuất hóa đơn</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="10">Bạn chưa có lịch sử thuê sách.</td></tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% if mode == "admin" %}
+<div class="action-row">
+    {% if can_manage_rentals %}<a class="btn-small" href="{{ url_for('export_rentals') }}">Xuất danh sách đơn thuê CSV</a>{% endif %}
+    {% if can_manage_users %}<a class="btn-small" href="{{ url_for('backup_db') }}">Sao lưu database</a>{% endif %}
+    {% if can_manage_users %}<a class="btn-small" href="{{ url_for('audit_logs') }}">Nhật ký hệ thống</a>{% endif %}
+</div>
+<section class="stats-grid compact">
+    <div class="stat-card"><strong>{{ stats.books }}</strong><span>Sách</span></div>
+    <div class="stat-card"><strong>{{ stats.users }}</strong><span>Tài khoản</span></div>
+    <div class="stat-card"><strong>{{ stats.pending }}</strong><span>Chờ xác nhận</span></div>
+    <div class="stat-card"><strong>{{ stats.approved }}</strong><span>Đang thuê</span></div>
+    <div class="stat-card"><strong>{{ stats.overdue }}</strong><span>Quá hạn</span></div>
+    <div class="stat-card"><strong>{{ "{:,.0f}".format(stats.late_fee or 0) }}</strong><span>Phí quá hạn</span></div>
+    <div class="stat-card"><strong>{{ stats.invoices }}</strong><span>Hóa đơn</span></div>
+    <div class="stat-card"><strong>{{ stats.scans }}</strong><span>Lượt quét</span></div>
+</section>
+
+{% if can_manage_books %}
+<section class="admin-section">
+    <h3>Thêm sách mới</h3>
+
+    <form method="POST" action="{{ url_for('add_book') }}" class="admin-form" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Tên sách" required>
+        <input type="text" name="author" placeholder="Tác giả" required>
+        <input type="text" name="category" placeholder="Thể loại" required>
+        <input type="number" name="quantity" placeholder="Số lượng" min="0" required>
+        <input type="number" name="price" placeholder="Giá thuê" min="0" required>
+        <input type="text" name="description" placeholder="Mô tả">
+        <input type="text" name="cover_image" placeholder="Link ảnh bìa truyện, có thể để trống">
+        <label class="file-label">Hoặc tải ảnh từ máy</label>
+        <input type="file" name="cover_file" accept="image/*">
+        <button type="submit">Thêm sách</button>
+    </form>
+</section>
+{% endif %}
+
+<section class="admin-section">
+    <div class="section-heading">
+        <h3>Danh sách sách</h3>
+        <form method="GET" action="{{ url_for('admin') }}" class="mini-filter">
+            <input type="text" name="book_keyword" placeholder="Tìm sách trong quản trị..." value="{{ book_keyword }}">
+            <button type="submit">Lọc</button>
+        </form>
+    </div>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Ảnh</th>
+            <th>Tên sách</th>
+            <th>Tác giả</th>
+            <th>Thể loại</th>
+            <th>Số lượng</th>
+            <th>Giá thuê</th>
+            <th>Thao tác</th>
+        </tr>
+
+        {% for book in books %}
+        <tr>
+            <td>{{ book.id }}</td>
+            <td><img class="admin-cover" src="{{ book.cover_image or '/static/uploads/default-cover.svg' }}" alt="{{ book.title }}"></td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.category }}</td>
+            <td>{{ book.quantity }}</td>
+            <td>{{ "{:,.0f}".format(book.price) }} VNĐ</td>
+            <td>
+                {% if can_manage_books %}
+                    <a class="btn-small" href="{{ url_for('edit_book', book_id=book.id) }}">Sửa</a>
+                    <a class="danger" href="{{ url_for('delete_book', book_id=book.id) }}" onclick="return confirm('Bạn chắc chắn muốn xóa sách này?')">Xóa</a>
+                {% else %}
+                    Không có quyền
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8">Không có sách phù hợp.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+
+{% if can_manage_rentals %}
+<section class="admin-section">
+    <div class="section-heading">
+        <h3>Quản lý đơn thuê</h3>
+        <form method="GET" action="{{ url_for('admin') }}" class="mini-filter">
+            <select name="status">
+                <option value="">Tất cả trạng thái</option>
+                {% for item in rental_statuses %}
+                    <option value="{{ item }}" {% if rental_status == item %}selected{% endif %}>{{ item }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Lọc</button>
+        </form>
+    </div>
+
+    <table>
+        <tr>
+            <th>Mã đơn</th>
+            <th>Khách hàng</th>
+            <th>Sách</th>
+            <th>Trạng thái</th>
+            <th>Ngày tạo</th>
+            <th>Hạn trả</th>
+            <th>Ngày trả</th>
+            <th>Phí quá hạn</th>
+            <th>Ghi chú</th>
+            <th>Thao tác</th>
+        </tr>
+
+        {% for rental in rentals %}
+        <tr>
+            <td>{{ rental.rental_code or rental.id }}</td>
+            <td>{{ rental.fullname }}<br><span class="muted-small">{{ rental.username }}</span></td>
+            <td>{{ rental.title }}</td>
+            <td><span class="status-badge {{ rental.status|status_class }}">{{ rental.status }}</span></td>
+            <td>{{ rental.created_at or '' }}</td>
+            <td>{{ rental.due_at or '' }}</td>
+            <td>{{ rental.returned_at or '' }}</td>
+            <td>{{ "{:,.0f}".format(rental.late_fee or 0) }} VNĐ</td>
+            <td>{{ rental.note or '' }}</td>
+            <td>
+                {% if rental.status != 'Đã hủy' %}
+                    <a class="btn-small" href="{{ url_for('invoice_detail', rental_id=rental.id) }}">Xem hóa đơn</a>
+                    <a class="btn-small secondary-outline" href="{{ url_for('download_invoice', rental_id=rental.id) }}">Tải TXT</a>
+                {% endif %}
+                {% if rental.status == 'Chờ xác nhận' %}
+                    <a class="btn-small" href="{{ url_for('approve_rental', rental_id=rental.id) }}">Xác nhận thuê</a>
+                    <a class="danger" href="{{ url_for('cancel_rental', rental_id=rental.id) }}">Hủy</a>
+                {% elif rental.status == 'Đã xác nhận' %}
+                    <a class="btn-small" href="{{ url_for('return_rental', rental_id=rental.id) }}">Xác nhận trả</a>
+                {% else %}
+                    Đã xử lý
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="10">Không có đơn thuê phù hợp.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+{% endif %}
+
+{% if can_manage_users %}
+<section class="admin-section">
+    <h3>Phân quyền tài khoản</h3>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Họ tên</th>
+            <th>Tên đăng nhập</th>
+            <th>Vai trò</th>
+            <th>Ngày tạo</th>
+            <th>Lần đăng nhập gần nhất</th>
+            <th>Cập nhật quyền</th>
+        </tr>
+
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.fullname }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ roles.get(user.role, user.role) }}</td>
+            <td>{{ user.created_at or '' }}</td>
+            <td>{{ user.last_login or '' }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('update_role', user_id=user.id) }}" class="role-form">
+                    <select name="role">
+                        {% for value, label in roles.items() %}
+                            <option value="{{ value }}" {% if user.role == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Lưu</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endif %}
+
+{% endif %}
+{% endblock %}

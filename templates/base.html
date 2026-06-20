@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuê sách truyện trực tuyến</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <div class="logo">BookRental Security</div>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Trang chủ</a>
+        <a href="{{ url_for('books') }}">Sách truyện</a>
+
+        {% if session.get("user_id") %}
+            <a href="{{ url_for('my_rentals') }}">Lịch sử thuê</a>
+
+            {% if can_manage_rentals %}
+                <a href="{{ url_for('admin') }}">Quản trị</a>
+                <a href="{{ url_for('analytics') }}">Thống kê</a>
+            {% endif %}
+
+            {% if can_security_scan %}
+                <a href="{{ url_for('security_scan') }}">Quét lỗ hổng</a>
+                <a href="{{ url_for('scan_history') }}">Lịch sử quét</a>
+            {% endif %}
+
+            {% if can_manage_users %}
+                <a href="{{ url_for('audit_logs') }}">Nhật ký</a>
+            {% endif %}
+
+            <span class="user-badge">{{ session.get("fullname") }} - {{ roles.get(session.get("role"), session.get("role")) }}</span>
+            <a href="{{ url_for('logout') }}">Đăng xuất</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Đăng nhập</a>
+            <a href="{{ url_for('register') }}">Đăng ký</a>
+        {% endif %}
+    </nav>
+</header>
+
+<main>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="message">
+                {% for msg in messages %}
+                    <p>{{ msg }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <p>Đề tài: Nghiên cứu phát hiện lỗ hổng trang web quản lý cho thuê sách truyện trực tuyến</p>
+</footer>
+
+</body>
+</html>

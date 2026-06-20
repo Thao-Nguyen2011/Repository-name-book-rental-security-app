@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-title">
+    <div>
+        <h2>Thống kê hệ thống</h2>
+        <p>Theo dõi tình hình sách, đơn thuê/trả, phí quá hạn và lịch sử quét lỗ hổng.</p>
+    </div>
+</div>
+
+<section class="admin-section">
+    <h3>Tổng quan đơn thuê</h3>
+    <section class="stats-grid compact">
+        <div class="stat-card"><strong>{{ rental_overview.total_rentals }}</strong><span>Tổng đơn thuê</span></div>
+        <div class="stat-card"><strong>{{ rental_overview.overdue_total or 0 }}</strong><span>Đơn quá hạn</span></div>
+        <div class="stat-card"><strong>{{ "{:,.0f}".format(rental_overview.late_fee_total or 0) }}</strong><span>Tổng phí quá hạn</span></div>
+    </section>
+</section>
+
+<section class="admin-section">
+    <h3>Tổng quan quét lỗ hổng</h3>
+    <section class="stats-grid compact">
+        <div class="stat-card"><strong>{{ scan_overview.total_scans }}</strong><span>Lượt quét</span></div>
+        <div class="stat-card"><strong>{{ scan_overview.high_total }}</strong><span>Lỗi mức cao</span></div>
+        <div class="stat-card"><strong>{{ scan_overview.medium_total }}</strong><span>Lỗi trung bình</span></div>
+        <div class="stat-card"><strong>{{ scan_overview.low_total }}</strong><span>Lỗi thấp</span></div>
+        <div class="stat-card"><strong>{{ scan_overview.avg_risk_score }}</strong><span>Điểm rủi ro TB</span></div>
+    </section>
+</section>
+
+<section class="admin-section">
+    <h3>Đơn thuê theo trạng thái</h3>
+    <table>
+        <tr><th>Trạng thái</th><th>Số lượng</th></tr>
+        {% for item in rental_by_status %}
+            <tr><td><span class="status-badge {{ item.status|status_class }}">{{ item.status }}</span></td><td>{{ item.total }}</td></tr>
+        {% else %}
+            <tr><td colspan="2">Chưa có đơn thuê.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+
+<section class="admin-section">
+    <h3>Sách được thuê nhiều</h3>
+    <table>
+        <tr><th>Tên sách</th><th>Tác giả</th><th>Số lượt thuê</th></tr>
+        {% for book in popular_books %}
+            <tr><td>{{ book.title }}</td><td>{{ book.author }}</td><td>{{ book.total_rentals }}</td></tr>
+        {% else %}
+            <tr><td colspan="3">Chưa có dữ liệu.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+
+<section class="admin-section">
+    <h3>Sách sắp hết hoặc hết</h3>
+    <table>
+        <tr><th>ID</th><th>Tên sách</th><th>Tác giả</th><th>Số lượng</th></tr>
+        {% for book in low_stock_books %}
+            <tr><td>{{ book.id }}</td><td>{{ book.title }}</td><td>{{ book.author }}</td><td>{{ book.quantity }}</td></tr>
+        {% else %}
+            <tr><td colspan="4">Không có sách sắp hết.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+
+<section class="admin-section">
+    <h3>Lịch sử quét gần đây</h3>
+    <table>
+        <tr><th>URL</th><th>Thời gian</th><th>Điểm rủi ro</th><th>Cao</th><th>Trung bình</th><th>Thấp</th></tr>
+        {% for item in latest_scans %}
+            <tr><td>{{ item.url }}</td><td>{{ item.scanned_at }}</td><td>{{ item.risk_score }}/100</td><td>{{ item.high_count }}</td><td>{{ item.medium_count }}</td><td>{{ item.low_count }}</td></tr>
+        {% else %}
+            <tr><td colspan="6">Chưa có lịch sử quét.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

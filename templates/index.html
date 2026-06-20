@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero app-hero">
+    <div class="hero-content">
+        <p class="eyebrow">BookRental Security App</p>
+        <h1>Ứng dụng quản lý cho thuê sách truyện trực tuyến</h1>
+        <p>
+            Hệ thống hỗ trợ khách hàng xem sách có ảnh bìa, gửi yêu cầu thuê;
+            nhân viên xử lý thuê/trả; quản trị viên theo dõi dữ liệu và kiểm tra lỗ hổng bảo mật cơ bản.
+        </p>
+
+        <div class="hero-actions">
+            <a class="btn" href="{{ url_for('books') }}">Khám phá kho sách</a>
+            {% if can_security_scan %}
+                <a class="btn secondary" href="{{ url_for('security_scan') }}">Quét lỗ hổng</a>
+            {% else %}
+                <a class="btn secondary" href="{{ url_for('login') }}">Đăng nhập</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="hero-bookshelf">
+        {% for book in featured_books[:4] %}
+            <img src="{{ book.cover_image or '/static/uploads/default-cover.svg' }}" alt="{{ book.title }}">
+        {% endfor %}
+    </div>
+</section>
+
+<section class="stats-grid">
+    <div class="stat-card">
+        <strong>{{ total_books }}</strong>
+        <span>Sách đang quản lý</span>
+    </div>
+    <div class="stat-card">
+        <strong>{{ total_rentals }}</strong>
+        <span>Đơn thuê đã tạo</span>
+    </div>
+    <div class="stat-card">
+        <strong>{{ total_scans }}</strong>
+        <span>Lượt quét bảo mật</span>
+    </div>
+</section>
+
+<section class="section-title-center">
+    <span class="eyebrow soft">Sách nổi bật</span>
+    <h2>Kho truyện có ảnh bìa trực quan</h2>
+    <p>Hiển thị giống ứng dụng thật hơn, dễ demo và dễ giải thích trong báo cáo.</p>
+</section>
+
+<div class="featured-row">
+    {% for book in featured_books %}
+    <a class="featured-book" href="{{ url_for('book_detail', book_id=book.id) }}">
+        <img src="{{ book.cover_image or '/static/uploads/default-cover.svg' }}" alt="{{ book.title }}">
+        <strong>{{ book.title }}</strong>
+        <span>{{ book.category }}</span>
+    </a>
+    {% endfor %}
+</div>
+
+<section class="features">
+    <div class="card">
+        <h3>Quản lý sách truyện</h3>
+        <p>Thêm, sửa, xóa, tìm kiếm, lọc thể loại, ảnh bìa và theo dõi số lượng sách còn lại.</p>
+    </div>
+
+    <div class="card">
+        <h3>Thuê và trả sách</h3>
+        <p>Khách hàng gửi yêu cầu thuê sách, nhân viên xác nhận, trả sách hoặc hủy đơn khi cần.</p>
+    </div>
+
+    <div class="card">
+        <h3>Phát hiện lỗ hổng</h3>
+        <p>Kiểm tra HTTP/HTTPS, Security Headers, form nhập liệu, SQL Injection và XSS cơ bản.</p>
+    </div>
+</section>
+{% endblock %}

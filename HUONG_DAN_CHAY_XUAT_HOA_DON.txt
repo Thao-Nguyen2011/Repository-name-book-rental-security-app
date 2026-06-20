@@ -1,0 +1,21 @@
+HUONG DAN CHAY BAN HOAN THIEN CO XUAT HOA DON
+
+1. Giai nen file zip.
+2. Mo terminal trong thu muc book-rental-security-hoan-thien.
+3. Chay lenh:
+   py -m pip install -r requirements.txt
+   py app.py
+4. Mo trinh duyet vao: http://127.0.0.1:5000
+
+Tai khoan demo:
+- Admin: admin / admin123
+- Nhan vien: staff / staff123
+- Khach hang: dang ky truc tiep tren website
+
+Cach demo xuat hoa don:
+1. Khach hang dang nhap va gui yeu cau thue sach.
+2. Admin/Nhan vien dang nhap.
+3. Vao Trang quan tri.
+4. Bam Xac nhan thue.
+5. Bam Xem de xem hoa don tren web hoac bam Tai de tai file hoa don .txt.
+6. Khi xac nhan tra sach, hoa don se cap nhat them phi qua han neu co.

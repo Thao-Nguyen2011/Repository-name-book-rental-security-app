@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-box large">
+    <h2>Quét lỗ hổng bảo mật website</h2>
+
+    <p>
+        Nhập một hoặc nhiều URL để kiểm tra các lỗi bảo mật cơ bản. Mỗi URL đặt trên một dòng,
+        tối đa 5 URL trong một lần quét.
+    </p>
+
+    <div class="scan-feature-box">
+        <b>Nâng cấp tuần 5-6:</b>
+        hệ thống kiểm tra HTTPS, phản hồi HTTP, Security Headers, Cookie, CSRF form POST,
+        upload file, XSS phản xạ, SQL Injection cơ bản, lộ debug và truy cập đường dẫn quản trị.
+    </div>
+
+    <form method="POST">
+        <label>URL website cần kiểm tra</label>
+        <textarea name="urls" rows="6" placeholder="Ví dụ:&#10;http://127.0.0.1:5000/login&#10;http://127.0.0.1:5000/books" required></textarea>
+
+        <button type="submit">Bắt đầu quét</button>
+    </form>
+
+    <p class="hint">
+        Lưu ý: Chỉ kiểm thử trên website của bạn hoặc website được phép kiểm thử.
+        Kết quả sẽ được lưu vào lịch sử quét để xem lại hoặc xuất báo cáo.
+    </p>
+</div>
+{% endblock %}
